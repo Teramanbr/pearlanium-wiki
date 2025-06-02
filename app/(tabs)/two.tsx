@@ -1,31 +1,42 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native'; // Adicionado ScrollView
 
-import EditScreenInfo from '@/components/EditScreenInfo';
+// import EditScreenInfo from '@/components/EditScreenInfo'; // Import não utilizado
 import { Text, View } from '@/components/Themed';
 
 export default function TabTwoScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Itens do Mod</Text>
+      {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
+      <Text style={styles.contentText}>Conteúdo sobre os itens do mod será exibido aqui.</Text>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', // Centraliza o título
+    // justifyContent: 'center', // Removido para permitir que o conteúdo flua do topo
+    paddingTop: 30, // Espaçamento no topo
+    paddingHorizontal: 20,
+  },
+  scrollView: {
+    flex: 1,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20, // Espaçamento abaixo do título
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
   },
+  contentText: {
+    fontSize: 16,
+    textAlign: 'center', // Pode ser 'left' quando for uma lista de itens
+    lineHeight: 24,
+  }
 });
