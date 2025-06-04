@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Text, View } from '@/components/Themed';
@@ -14,10 +14,10 @@ export interface Item {
 
 interface ItemCardProps {
   item: Item;
-  onPress?: () => void;
+  onItemPress?: (item: Item) => void;
 }
 
-export default function ItemCard({ item, onPress }: ItemCardProps) {
+function ItemCard({ item, onItemPress }: ItemCardProps) {
   const { theme } = useTheme();
 
   const cardBackgroundColor = theme === 'dark' ? '#2C2C2E' : '#FFFFFF';
@@ -37,8 +37,8 @@ export default function ItemCard({ item, onPress }: ItemCardProps) {
         )}
       </View>
       <View style={styles.infoContainer}>
-        <Text style={[styles.itemName, { color: textColor }]}>{item.name}</Text>
-        <Text style={[styles.itemDescription, { color: descriptionColor }]}>
+        <Text style={[styles.itemName, { color: textColor }]} numberOfLines={2} ellipsizeMode="tail">{item.name}</Text>
+        <Text style={[styles.itemDescription, { color: descriptionColor }]} numberOfLines={3} ellipsizeMode="tail">
           {item.description}
         </Text>
         <TouchableOpacity 
@@ -49,7 +49,7 @@ export default function ItemCard({ item, onPress }: ItemCardProps) {
               borderColor: buttonBorderColor 
             }
           ]} 
-          onPress={onPress}
+          onPress={onItemPress ? () => onItemPress(item) : undefined}
         >
           <Text style={[styles.detailsButtonText, { color: buttonTextColor }]}>View Details</Text>
           <FontAwesome name="arrow-right" size={16} color={buttonTextColor} />
@@ -59,20 +59,24 @@ export default function ItemCard({ item, onPress }: ItemCardProps) {
   );
 }
 
+export default memo(ItemCard);
+
 const styles = StyleSheet.create({
   card: {
     borderRadius: 15,
     marginBottom: 20,
-    width: '100%', // Card takes full width of its container in FlatList column
+    width: 320, // Fixed width for the card
+    height: 380, // Fixed height for the card
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3, // For Android
     overflow: Platform.OS === 'android' ? 'hidden' : 'visible', // Fix for Android shadow with borderRadius
+    flexDirection: 'column', // Ensure content flows top to bottom
   },
   imagePlaceholder: {
-    height: 200, // Fixed height for the image area
+    height: 180, // Adjusted height for the image area
     backgroundColor: '#444', // Darker placeholder background
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,6 +91,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 15,
+    flex: 1, // Allow infoContainer to fill remaining space
+    justifyContent: 'space-between', // Distribute space between name/desc and button
   },
   itemName: {
     fontSize: 20,
@@ -95,7 +101,7 @@ const styles = StyleSheet.create({
   },
   itemDescription: {
     fontSize: 14,
-    marginBottom: 15,
+    marginBottom: 10, // Adjusted margin
     lineHeight: 20,
   },
   detailsButton: {

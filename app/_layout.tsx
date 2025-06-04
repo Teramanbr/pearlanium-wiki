@@ -116,6 +116,7 @@ function AppContent() {
             },
             drawerItemStyle: {
               paddingVertical: 5, // Increased vertical padding for item height
+              borderRadius: 8,
             },
           }}>
           <Drawer.Screen

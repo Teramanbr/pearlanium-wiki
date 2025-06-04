@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Added useState, useEffect
+import React, { useState, useEffect, useCallback } from 'react'; // Added useState, useEffect, useCallback
 import { StyleSheet, ScrollView, TextInput, Platform, FlatList } from 'react-native'; // Added FlatList
 import FontAwesome from '@expo/vector-icons/FontAwesome'; // Importar FontAwesome
 import { Text, View } from '@/components/Themed';
@@ -60,74 +60,71 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
     }
   }, [searchQuery]);
 
-  const renderItem = ({ item }: { item: Item }) => (
-    <ItemCard 
-      item={item} 
-      onPress={() => console.log('View Details for:', item.name)} // Placeholder action
+  const handleItemPress = useCallback((item: Item) => {
+    console.log('View Details for:', item.name); // Placeholder action
+  }, []); // Empty dependency array, as console.log has no external dependencies here
+
+  const renderItem = useCallback(({ item }: { item: Item }) => (
+    <ItemCard
+      item={item}
+      onItemPress={handleItemPress} // Pass the memoized handler
     />
+  ), [handleItemPress]); // renderItem is memoized and depends on handleItemPress
+
+  // Component for the FlatList header
+  const renderListHeader = () => (
+    <View style={styles.headerContainer}> 
+      <Text style={[styles.title, { color: theme === 'dark' ? '#4CAF50' : Colors.light.tint }]}>Pearlanium Mod Items</Text>
+      <Text style={[styles.subtitle, { color: themedTextColor }]}>
+        Discover all the unique items and blocks introduced by the Pearlanium Mod. Click on an item to see more details and crafting recipes.
+      </Text>
+      <View style={[
+        styles.searchBarContainer,
+        { 
+          backgroundColor: searchBarBackgroundColor,
+          borderColor: searchBarBorderColor,
+        }
+      ]}>
+        <FontAwesome name="search" size={20} color={themedPlaceholderColor} style={styles.searchIcon} />
+        <TextInput
+          style={[styles.searchInput, { color: themedTextColor }]}
+          placeholder="Search items..."
+          placeholderTextColor={themedPlaceholderColor}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+    </View>
   );
 
   return (
-    // Changed from ScrollView to View as FlatList handles scrolling
-    <View style={styles.pageContainer}> 
-      <View style={styles.headerContainer}> 
-        <Text style={[styles.title, { color: theme === 'dark' ? '#4CAF50' : Colors.light.tint }]}>Pearlanium Mod Items</Text>
-        <Text style={[styles.subtitle, { color: themedTextColor }]}>
-          Discover all the unique items and blocks introduced by the Pearlanium Mod. Click on an item to see more details and crafting recipes.
-        </Text>
-
-        <View style={[
-          styles.searchBarContainer,
-          { 
-            backgroundColor: searchBarBackgroundColor,
-            borderColor: searchBarBorderColor,
-          }
-        ]}>
-          <FontAwesome name="search" size={20} color={themedPlaceholderColor} style={styles.searchIcon} />
-          <TextInput
-            style={[styles.searchInput, { color: themedTextColor }]}
-            placeholder="Search items..."
-            placeholderTextColor={themedPlaceholderColor}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-      </View>
-
+    <View style={styles.pageContainer}>
       <FlatList
         data={filteredItems}
         renderItem={renderItem}
         keyExtractor={item => item.id}
+        ListHeaderComponent={renderListHeader} // Add the header component here
         style={styles.listStyle}
         contentContainerStyle={styles.listContentContainer}
         ListEmptyComponent={<Text style={{color: themedTextColor, marginTop: 20}}>No items found matching your search.</Text>}
-        // numColumns={2} // Example for a 2-column grid, enable if desired
-        // columnWrapperStyle={styles.row} // Required for numColumns > 1
+        initialNumToRender={5}
+        maxToRenderPerBatch={5}
+        windowSize={11}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pageContainer: { // New container for the whole page
+  pageContainer: { 
     flex: 1,
-    // alignItems: 'center', // Removed, FlatList will take width
+    // alignItems: 'center', // No longer needed here as FlatList manages its content alignment
   },
-  headerContainer: { // Container for title, subtitle, search bar
+  headerContainer: { // This style is now used by the ListHeaderComponent
     alignItems: 'center',
     paddingTop: 30,
     paddingHorizontal: 20,
-    // paddingBottom: 0, // Let marginBottom of searchBar handle space
   },
-  // container: { // Original ScrollView container, replaced by headerContainer & list specific styles
-  //   alignItems: 'center',
-  //   paddingTop: 30,
-  //   paddingHorizontal: 20,
-  //   paddingBottom: 20, 
-  // },
-  // scrollView: { // Replaced by FlatList
-  //   flex: 1,
-  // },
   title: {
     fontSize: 28, // Increased size
     fontWeight: 'bold',
@@ -169,12 +166,4 @@ const styles = StyleSheet.create({
     paddingBottom: 20, // Padding at the bottom of the list
     alignItems: 'center', // Center cards if list width is more than card width (for single column)
   },
-  // itemsListContainer: { // Replaced by FlatList
-  //   width: '100%',
-  //   alignItems: 'center',
-  // },
-  // row: { // Example for numColumns > 1
-  //   flex: 1,
-  //   justifyContent: "space-around",
-  // }
 });
