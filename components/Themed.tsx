@@ -6,7 +6,8 @@
 import { Text as DefaultText, View as DefaultView } from 'react-native';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from './useColorScheme';
+// import { useColorScheme } from './useColorScheme'; // No longer using system scheme directly
+import { useTheme as useAppTheme } from '@/contexts/ThemeContext'; // Import our custom useTheme hook
 
 type ThemeProps = {
   lightColor?: string;
@@ -20,13 +21,13 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
-  const theme = useColorScheme() ?? 'light';
-  const colorFromProps = props[theme];
+  const { theme } = useAppTheme(); // Use our app's theme from context
+  const colorFromProps = props[theme]; // props.light or props.dark based on our app's theme
 
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    return Colors[theme][colorName]; // Colors.light.text or Colors.dark.text
   }
 }
 

@@ -4,12 +4,12 @@ import { Platform, StyleSheet } from 'react-native';
 // import EditScreenInfo from '@/components/EditScreenInfo'; // Import não utilizado
 import { Text, View } from '@/components/Themed';
 
-export default function ModalScreen() {
+export default function AboutScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sobre o Mod Pearlanium</Text>
+      <Text style={styles.title}>Sobre Este Aplicativo</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text style={styles.infoText}>Esta wiki fornece informações e guias para o Mod Pearlanium para Minecraft.</Text>
+      <Text style={styles.infoText}>Este aplicativo é um trabalho de faculdade.</Text>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
