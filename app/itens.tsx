@@ -9,31 +9,31 @@ import ItemCard, { Item } from '@/components/ItemCard'; // Import ItemCard and I
 // import EditScreenInfo from '@/components/EditScreenInfo'; // Import não utilizado
 
 const NEW_MOCK_ITEMS: Item[] = [
-  { id: '1', name: 'Pearlanium Ingot', description: 'Description for Pearlanium Ingot' },
-  { id: '2', name: 'Pearlanium Sword', description: 'Description for Pearlanium Sword' },
-  { id: '3', name: 'Pearlanium Pickaxe', description: 'Description for Pearlanium Pickaxe' },
-  { id: '4', name: 'Pearlanium Helmet', description: 'Description for Pearlanium Helmet' },
-  { id: '5', name: 'Calibrated Echo Shard', description: 'Description for Calibrated Echo Shard' },
-  { id: '6', name: 'Pearlanium Chestplate', description: 'Description for Pearlanium Chestplate' },
-  { id: '7', name: 'Pearlanium Leggings', description: 'Description for Pearlanium Leggings' },
-  { id: '8', name: 'Pearlanium Boots', description: 'Description for Pearlanium Boots' },
-  { id: '9', name: 'Pearlanium Axe', description: 'Description for Pearlanium Axe' },
-  { id: '10', name: 'Pearlanium Hoe', description: 'Description for Pearlanium Hoe' },
-  { id: '11', name: 'Pearlanium Shovel', description: 'Description for Pearlanium Shovel' },
-  { id: '12', name: 'Reinforced Pearlanium Sword', description: 'Description for Reinforced Pearlanium Sword' },
-  { id: '13', name: 'Reinforced Pearlanium Pickaxe', description: 'Description for Reinforced Pearlanium Pickaxe' },
-  { id: '14', name: 'Reinforced Pearlanium Helmet', description: 'Description for Reinforced Pearlanium Helmet' },
-  { id: '15', name: 'Reinforced Pearlanium Chestplate', description: 'Description for Reinforced Pearlanium Chestplate' },
-  { id: '16', name: 'Reinforced Pearlanium Leggings', description: 'Description for Reinforced Pearlanium Leggings' },
-  { id: '17', name: 'Reinforced Pearlanium Boots', description: 'Description for Reinforced Pearlanium Boots' },
-  { id: '18', name: 'Reinforced Pearlanium Axe', description: 'Description for Reinforced Pearlanium Axe' },
-  { id: '19', name: 'Reinforced Pearlanium Hoe', description: 'Description for Reinforced Pearlanium Hoe' },
-  { id: '20', name: 'Reinforced Pearlanium Shovel', description: 'Description for Reinforced Pearlanium Shovel' },
-  { id: '21', name: 'Brute Pearlanium', description: 'Description for Brute Pearlanium' },
-  { id: '22', name: 'Pearlanium Upgrade Smithing Template', description: 'Description for Pearlanium Upgrade Smithing Template' },
-  { id: '23', name: 'Reinforced Pearlanium Upgrade Smithing Template', description: 'Description for Reinforced Pearlanium Upgrade Smithing Template' },
-  { id: '24', name: 'Pearled Block', description: 'Description for Pearled Block' },
-  { id: '25', name: 'Pearlanium Block', description: 'Description for Pearlanium Block' },
+  { id: '1', name: 'Lingote de Perolânio', description: 'Descrição para Lingote de Perolânio' },
+  { id: '2', name: 'Espada de Perolânio', description: 'Descrição para Espada de Perolânio' },
+  { id: '3', name: 'Picareta de Perolânio', description: 'Descrição para Picareta de Perolânio' },
+  { id: '4', name: 'Capacete de Perolânio', description: 'Descrição para Capacete de Perolânio' },
+  { id: '5', name: 'Fragmento de Eco Calibrado', description: 'Descrição para Fragmento de Eco Calibrado' },
+  { id: '6', name: 'Peitoral de Perolânio', description: 'Descrição para Peitoral de Perolânio' },
+  { id: '7', name: 'Calças de Perolânio', description: 'Descrição para Calças de Perolânio' },
+  { id: '8', name: 'Botas de Perolânio', description: 'Descrição para Botas de Perolânio' },
+  { id: '9', name: 'Machado de Perolânio', description: 'Descrição para Machado de Perolânio' },
+  { id: '10', name: 'Enxada de Perolânio', description: 'Descrição para Enxada de Perolânio' },
+  { id: '11', name: 'Pá de Perolânio', description: 'Descrição para Pá de Perolânio' },
+  { id: '12', name: 'Espada de Perolânio Reforçada', description: 'Descrição para Espada de Perolânio Reforçada' },
+  { id: '13', name: 'Picareta de Perolânio Reforçada', description: 'Descrição para Picareta de Perolânio Reforçada' },
+  { id: '14', name: 'Capacete de Perolânio Reforçado', description: 'Descrição para Capacete de Perolânio Reforçado' },
+  { id: '15', name: 'Peitoral de Perolânio Reforçado', description: 'Descrição para Peitoral de Perolânio Reforçado' },
+  { id: '16', name: 'Calças de Perolânio Reforçadas', description: 'Descrição para Calças de Perolânio Reforçadas' },
+  { id: '17', name: 'Botas de Perolânio Reforçadas', description: 'Descrição para Botas de Perolânio Reforçadas' },
+  { id: '18', name: 'Machado de Perolânio Reforçado', description: 'Descrição para Machado de Perolânio Reforçado' },
+  { id: '19', name: 'Enxada de Perolânio Reforçada', description: 'Descrição para Enxada de Perolânio Reforçada' },
+  { id: '20', name: 'Pá de Perolânio Reforçada', description: 'Descrição para Pá de Perolânio Reforçada' },
+  { id: '21', name: 'Perolânio Bruto', description: 'Descrição para Perolânio Bruto' },
+  { id: '22', name: 'Molde de Ferraria para Melhoria de Perolânio', description: 'Descrição para Molde de Ferraria para Melhoria de Perolânio' },
+  { id: '23', name: 'Molde de Ferraria para Melhoria de Perolânio Reforçado', description: 'Descrição para Molde de Ferraria para Melhoria de Perolânio Reforçado' },
+  { id: '24', name: 'Bloco Perolado', description: 'Descrição para Bloco Perolado' },
+  { id: '25', name: 'Bloco de Perolânio', description: 'Descrição para Bloco de Perolânio' },
 ];
 
 export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
@@ -61,7 +61,7 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
   }, [searchQuery]);
 
   const handleItemPress = useCallback((item: Item) => {
-    console.log('View Details for:', item.name); // Placeholder action
+    console.log('Ver Detalhes de:', item.name); // Placeholder action
   }, []); // Empty dependency array, as console.log has no external dependencies here
 
   const renderItem = useCallback(({ item }: { item: Item }) => (
@@ -74,9 +74,9 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
   // Component for the FlatList header
   const renderListHeader = () => (
     <View style={styles.headerContainer}> 
-      <Text style={[styles.title, { color: theme === 'dark' ? '#4CAF50' : Colors.light.tint }]}>Pearlanium Mod Items</Text>
+      <Text style={[styles.title, { color: theme === 'dark' ? '#4CAF50' : Colors.light.tint }]}>Itens do Mod Perolânio</Text>
       <Text style={[styles.subtitle, { color: themedTextColor }]}>
-        Discover all the unique items and blocks introduced by the Pearlanium Mod. Click on an item to see more details and crafting recipes.
+        Descubra todos os itens e blocos únicos introduzidos pelo Mod Perolânio. Clique em um item para ver mais detalhes e receitas de criação.
       </Text>
       <View style={[
         styles.searchBarContainer,
@@ -88,7 +88,7 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
         <FontAwesome name="search" size={20} color={themedPlaceholderColor} style={styles.searchIcon} />
         <TextInput
           style={[styles.searchInput, { color: themedTextColor }]}
-          placeholder="Search items..."
+          placeholder="Pesquisar itens..."
           placeholderTextColor={themedPlaceholderColor}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -106,7 +106,7 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
         ListHeaderComponent={renderListHeader} // Add the header component here
         style={styles.listStyle}
         contentContainerStyle={styles.listContentContainer}
-        ListEmptyComponent={<Text style={{color: themedTextColor, marginTop: 20}}>No items found matching your search.</Text>}
+        ListEmptyComponent={<Text style={{color: themedTextColor, marginTop: 20}}>Nenhum item encontrado para a sua pesquisa.</Text>}
         initialNumToRender={5}
         maxToRenderPerBatch={5}
         windowSize={11}

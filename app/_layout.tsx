@@ -90,10 +90,10 @@ export default function RootLayout() {
 
 function AppContent() {
   const { theme } = useTheme();
-  const activeColor = '#FF7001'; // Orange color for active items
-  const inactiveColor = theme === 'dark' ? '#A0A0A0' : '#606060'; // Adjusted for theme
-  const activeBgColor = theme === 'dark' ? 'rgba(255, 112, 1, 0.2)' : 'rgba(255, 112, 1, 0.1)';
-  const headerTextColor = theme === 'dark' ? '#FFFFFF' : '#000000'; // Define header text color based on theme
+  const newActiveBgColor = '#FF7001'; // Solid orange for active background
+  const newActiveTintColor = '#FFFFFF'; // White for active text/icon
+  const inactiveColor = theme === 'dark' ? '#A0A0A0' : '#606060';
+  const headerTextColor = theme === 'dark' ? '#FFFFFF' : '#000000';
 
   const gestureHandlerRootViewStyle = [
     { flex: 1 },
@@ -107,10 +107,10 @@ function AppContent() {
           drawerContent={(props) => <CustomDrawerContent {...props} />}
           screenOptions={{
             drawerPosition: 'right',
-            drawerActiveTintColor: activeColor,
+            drawerActiveTintColor: newActiveTintColor, // Use new white color
             drawerInactiveTintColor: inactiveColor,
-            drawerActiveBackgroundColor: activeBgColor,
-            headerTintColor: headerTextColor, // Set header text color
+            drawerActiveBackgroundColor: newActiveBgColor, // Use new solid orange color
+            headerTintColor: headerTextColor,
             drawerLabelStyle: {
               fontSize: 16, // Increased font size
             },
@@ -137,6 +137,23 @@ function AppContent() {
               drawerIcon: ({ size, color }) => (
                 <FontAwesome name="cube" size={size} color={color} />
               ),
+            }}
+          />
+          <Drawer.Screen
+            name="login"
+            options={{
+              drawerLabel: 'Login',
+              title: 'Login',
+              drawerIcon: ({ size, color }) => (
+                <FontAwesome name="sign-in" size={size} color={color} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="signup"
+            options={{
+              drawerItemStyle: { display: 'none' },
+              title: 'Criar Conta',
             }}
           />
           <Drawer.Screen
