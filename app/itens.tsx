@@ -51,6 +51,13 @@ export default function ItemsScreen() {
 
   // Search functionality
   useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenWidth(window.width);
+    });
+    return () => subscription?.remove();
+  }, []);
+
+  useEffect(() => {
     if (searchQuery.trim() === '') {
       setFilteredItems(NEW_MOCK_ITEMS);
     } else {
@@ -147,6 +154,7 @@ export default function ItemsScreen() {
     <ThemedView style={styles.pageContainer}>
       {renderHeader()}
       <FlatList
+        key={`grid-${numColumns}-${screenWidth}`}
         data={filteredItems}
         renderItem={renderItem}
         keyExtractor={item => item.id}
