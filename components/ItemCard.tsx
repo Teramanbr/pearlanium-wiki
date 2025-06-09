@@ -16,9 +16,10 @@ export interface Item {
 interface ItemCardProps {
   item: Item;
   onItemPress?: (item: Item) => void;
+  style?: object;
 }
 
-function ItemCard({ item, onItemPress }: ItemCardProps) {
+function ItemCard({ item, onItemPress, style }: ItemCardProps) {
   const { theme } = useTheme();
 
   const cardBackgroundColor = theme === 'dark' ? '#2C2C2E' : '#FFFFFF';
@@ -29,7 +30,7 @@ function ItemCard({ item, onItemPress }: ItemCardProps) {
   const buttonBorderColor = theme === 'dark' ? '#3A3A3C' : '#D1D1D6';
 
   return (
-    <View style={[styles.card, { backgroundColor: cardBackgroundColor }]}>
+    <View style={[styles.card, { backgroundColor: cardBackgroundColor }, style]}>
       <View style={styles.imagePlaceholder}>
         {item.imageUri ? (
           <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
@@ -66,8 +67,6 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 15,
     marginBottom: 20,
-    width: 320, // Fixed width for the card
-    height: 380, // Fixed height for the card
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

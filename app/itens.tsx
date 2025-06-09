@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'; // Added useState, useEffect, useCallback
-import { StyleSheet, ScrollView, TextInput, Platform, FlatList } from 'react-native'; // Added FlatList
+import { StyleSheet, ScrollView, TextInput, Platform, FlatList, Dimensions } from 'react-native'; // Added FlatList and Dimensions
 import FontAwesome from '@expo/vector-icons/FontAwesome'; // Importar FontAwesome
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext'; // Import useTheme
@@ -41,7 +41,15 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
   const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState<Item[]>(NEW_MOCK_ITEMS);
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
   const router = useRouter(); // Initialize router
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenWidth(window.width);
+    });
+    return () => subscription?.remove();
+  }, []);
 
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const themedPlaceholderColor = theme === 'dark' ? Colors.dark.placeholderText : Colors.light.placeholderText;
@@ -66,12 +74,27 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
     router.push(`/itens/${item.id}`);
   }, [router]);
 
+  const cardWidth = 300; // Fixed card width
+  const padding = 20; // Fixed padding
+  const gap = 16; // Fixed gap between cards
+  const numColumns = Math.max(1, Math.floor((screenWidth - padding * 2) / (cardWidth + gap)));
+  const adjustedCardWidth = ((screenWidth - padding * 2 - (gap * (numColumns - 1))) / numColumns);
+
   const renderItem = useCallback(({ item }: { item: Item }) => (
-    <ItemCard
-      item={item}
-      onItemPress={handleItemPress} // Pass the memoized handler
-    />
-  ), [handleItemPress]); // renderItem is memoized and depends on handleItemPress
+    <View style={{ 
+      width: adjustedCardWidth, 
+      marginBottom: gap,
+      marginLeft: gap / 3,
+      marginRight: gap / 2, // Explicit equal spacing
+      minWidth: cardWidth
+    }}>
+      <ItemCard
+        item={item}
+        onItemPress={handleItemPress}
+        style={{ width: '100%' }}
+      />
+    </View>
+  ), [handleItemPress, adjustedCardWidth]); // renderItem is memoized and depends on handleItemPress
 
   // Component for the FlatList header
   const renderListHeader = () => (
@@ -101,17 +124,25 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
 
   return (
     <View style={styles.pageContainer}>
+      {/* Fixed Header with Search */}
+      <View style={styles.headerScrollContainer}>
+        {renderListHeader()}
+      </View>
+
+      {/* Scrollable Items List */}
       <FlatList
+        key={`grid-${numColumns}`} // Force re-render when columns change
         data={filteredItems}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        ListHeaderComponent={renderListHeader} // Add the header component here
         style={styles.listStyle}
         contentContainerStyle={styles.listContentContainer}
         ListEmptyComponent={<Text style={{color: themedTextColor, marginTop: 20}}>Nenhum item encontrado para a sua pesquisa.</Text>}
         initialNumToRender={5}
         maxToRenderPerBatch={5}
         windowSize={11}
+        numColumns={numColumns}
+        keyboardShouldPersistTaps="handled"
       />
     </View>
   );
@@ -125,47 +156,59 @@ const styles = StyleSheet.create({
   headerContainer: { // This style is now used by the ListHeaderComponent
     alignItems: 'center',
     paddingTop: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: Math.min(20, Dimensions.get('window').width * 0.05), // Responsive padding
   },
   title: {
-    fontSize: 28, // Increased size
+    fontSize: Math.min(28, Dimensions.get('window').width * 0.07), // Responsive font size
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10, // Reduced margin
+    marginBottom: 10,
+    maxWidth: '90%', // Prevent overflow
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: Math.min(16, Dimensions.get('window').width * 0.04), // Responsive font size
     textAlign: 'center',
-    marginBottom: 25, // Increased margin
+    marginBottom: 25,
     lineHeight: 22,
-    paddingHorizontal: 10, // Ensure it doesn't get too wide on larger screens if centered
+    paddingHorizontal: 10,
+    maxWidth: '90%', // Prevent overflow
   },
   searchBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
-    paddingHorizontal: 15,
-    paddingVertical: Platform.OS === 'ios' ? 12 : 10, // Adjusted padding for different platforms
-    width: '100%', // Take full width of the container
-    maxWidth: 600, // Max width for larger screens, adjust as needed
-    marginBottom: 20, // Space before the list starts
+    paddingHorizontal: Math.min(15, Dimensions.get('window').width * 0.04),
+    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+    width: '90%',
+    maxWidth: 600,
+    minWidth: 250,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   searchIcon: {
-    marginRight: 10,
+    marginRight: Math.min(10, Dimensions.get('window').width * 0.03),
+    fontSize: Math.min(20, Dimensions.get('window').width * 0.05),
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
-    height: '100%', // Ensure TextInput fills the vertical space of container
+    fontSize: Math.min(16, Dimensions.get('window').width * 0.04),
+    height: '100%',
   },
   listStyle: {
     flex: 1, // Ensure FlatList takes available space
     width: '100%', // Ensure FlatList takes full width
   },
+  headerScrollContainer: {
+    paddingHorizontal: Math.min(20, Dimensions.get('window').width * 0.05),
+    paddingTop: 30,
+    paddingBottom: 10,
+  },
   listContentContainer: {
-    paddingHorizontal: 20, // Horizontal padding for the list items
-    paddingBottom: 20, // Padding at the bottom of the list
-    alignItems: 'center', // Center cards if list width is more than card width (for single column)
+    paddingLeft: 16, // Matches gap size
+    paddingRight: 16, // Matches gap size
+    paddingBottom: 20,
+    gap: 16,
+    justifyContent: 'center',
   },
 });
