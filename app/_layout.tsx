@@ -194,6 +194,13 @@ function AppContent() {
             }}
           />
           <Drawer.Screen
+            name="itens/[id]"
+            options={{
+              drawerItemStyle: { display: 'none' },
+              title: 'Detalhe do Item',
+            }}
+          />
+          <Drawer.Screen
             name="+not-found"
             options={{
               drawerItemStyle: { display: 'none' },

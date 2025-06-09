@@ -5,6 +5,7 @@ import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext'; // Import useTheme
 import Colors from '@/constants/Colors'; // Import Colors
 import ItemCard, { Item } from '@/components/ItemCard'; // Import ItemCard and Item interface
+import { useRouter } from 'expo-router'; // Import useRouter for navigation
 
 // import EditScreenInfo from '@/components/EditScreenInfo'; // Import não utilizado
 
@@ -40,6 +41,7 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
   const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState<Item[]>(NEW_MOCK_ITEMS);
+  const router = useRouter(); // Initialize router
 
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const themedPlaceholderColor = theme === 'dark' ? '#888' : '#BBB';
@@ -61,8 +63,8 @@ export default function ItemsScreen() { // Renamed from TabTwoScreen for clarity
   }, [searchQuery]);
 
   const handleItemPress = useCallback((item: Item) => {
-    console.log('Ver Detalhes de:', item.name); // Placeholder action
-  }, []); // Empty dependency array, as console.log has no external dependencies here
+    router.push(`/itens/${item.id}`);
+  }, [router]);
 
   const renderItem = useCallback(({ item }: { item: Item }) => (
     <ItemCard
