@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
+import { View, ActivityIndicator } from 'react-native'; // Import View and ActivityIndicator
 
 type Theme = 'light' | 'dark';
 
@@ -17,20 +18,32 @@ interface ThemeProviderComponentProps {
 
 export const ThemeProviderComponent: React.FC<ThemeProviderComponentProps> = ({ children }) => {
   const systemTheme = useSystemColorScheme();
-  const [theme, setTheme] = useState<Theme>(systemTheme || 'light');
-  const [isSystemTheme, setIsSystemTheme] = useState(true); // To track if we are using user's choice or system
+  const [theme, setTheme] = useState<Theme>('light'); // Default to light theme
+  const [isSystemTheme, setIsSystemTheme] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    if (isSystemTheme) {
-      setTheme(systemTheme || 'light');
+    // Handle system theme detection
+    if (systemTheme) {
+      setTheme(systemTheme);
     }
-  }, [systemTheme, isSystemTheme]);
+    setIsLoading(false);
+  }, [systemTheme]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    setIsSystemTheme(false); // User has made a choice
+    setIsSystemTheme(false);
   };
+
+  // Show loading indicator while theme is being determined
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isSystemTheme }}>
@@ -42,7 +55,12 @@ export const ThemeProviderComponent: React.FC<ThemeProviderComponentProps> = ({ 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProviderComponent');
+    console.warn('useTheme called before theme initialization - using light theme as fallback');
+    return { 
+      theme: 'light' as Theme, 
+      toggleTheme: () => {}, 
+      isSystemTheme: false 
+    };
   }
   return context;
-}; 
+};
