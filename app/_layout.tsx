@@ -18,6 +18,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
 
 import { ThemeProviderComponent, useTheme } from '@/contexts/ThemeContext';
+import { auth } from '@/firebase';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,11 +42,28 @@ function CustomDrawerContent(props: any) {
   // Determine text color based on theme for the custom button
   const themedTextColor = theme === 'dark' ? '#FFFFFF' : '#000000';
 
+  const items = props.items || [];
+  const filteredItems = auth.currentUser
+    ? items.filter((item: { key: string }) => item.key !== 'login')
+    : items;
+
   return (
     <DrawerContentScrollView {...props} style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
       <View style={{flex: 1}}>
-        <DrawerItemList {...props} />
+        <DrawerItemList {...props} items={filteredItems} />
       </View>
+      {/* Profile Button - only shown when logged in */}
+      {auth.currentUser && (
+        <DrawerItem
+          label="Perfil"
+          icon={({ color, size }) => (
+            <FontAwesome name="user-circle" size={size} color={color} />
+          )}
+          onPress={() => props.navigation.navigate('profile')}
+          labelStyle={[styles.customDrawerLabel, { color: themedTextColor }]}
+          style={styles.customDrawerItem}
+        />
+      )}
       {/* Custom Theme Toggle Button at the bottom */}
       <DrawerItem
         label={buttonText}
@@ -139,16 +157,18 @@ function AppContent() {
               ),
             }}
           />
-          <Drawer.Screen
-            name="login"
-            options={{
-              drawerLabel: 'Login',
-              title: 'Login',
-              drawerIcon: ({ size, color }) => (
-                <FontAwesome name="sign-in" size={size} color={color} />
-              ),
-            }}
-          />
+          {!auth.currentUser && (
+            <Drawer.Screen
+              name="login"
+              options={{
+                drawerLabel: 'Login',
+                title: 'Login',
+                drawerIcon: ({ size, color }) => (
+                  <FontAwesome name="sign-in" size={size} color={color} />
+                ),
+              }}
+            />
+          )}
           <Drawer.Screen
             name="signup"
             options={{
@@ -164,6 +184,13 @@ function AppContent() {
               drawerIcon: ({ size, color }) => (
                 <FontAwesome name="info-circle" size={size} color={color} />
               ),
+            }}
+          />
+          <Drawer.Screen
+            name="profile"
+            options={{
+              drawerItemStyle: { display: 'none' },
+              title: 'Perfil',
             }}
           />
           <Drawer.Screen

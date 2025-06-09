@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
+import { signInWithEmailAndPassword } from '@/firebase';
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
@@ -11,6 +12,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const themedPlaceholderColor = theme === 'dark' ? '#888' : '#BBB';
@@ -19,13 +21,29 @@ export default function LoginScreen() {
   const customButtonColor = '#FF7001';
   const buttonTextColor = '#FFFFFF';
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Erro', 'Por favor, preencha o email e a senha.');
       return;
     }
-    Alert.alert('Login', `Email: ${email}, Senha: ${password}`);
-    // router.replace('/');
+
+    try {
+      setLoading(true);
+      await signInWithEmailAndPassword(email, password);
+      router.replace('/profile');
+    } catch (error: any) {
+      let errorMessage = 'Ocorreu um erro ao fazer login';
+      if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Email inválido';
+      } else if (error.code === 'auth/user-disabled') {
+        errorMessage = 'Esta conta foi desativada';
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = 'Email ou senha incorretos';
+      }
+      Alert.alert('Erro', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignUp = () => {
@@ -69,9 +87,16 @@ export default function LoginScreen() {
       <TouchableOpacity 
         style={[styles.button, { backgroundColor: customButtonColor }]}
         onPress={handleLogin}
+        disabled={loading}
       >
-        <FontAwesome name="sign-in" size={20} color={buttonTextColor} style={styles.buttonIcon} />
-        <Text style={[styles.buttonText, { color: buttonTextColor }]}>Entrar</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color={buttonTextColor} />
+        ) : (
+          <>
+            <FontAwesome name="sign-in" size={20} color={buttonTextColor} style={styles.buttonIcon} />
+            <Text style={[styles.buttonText, { color: buttonTextColor }]}>Entrar</Text>
+          </>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleSignUp} style={styles.signUpButton}>
@@ -134,4 +159,4 @@ const styles = StyleSheet.create({
   signUpLink: {
     fontWeight: 'bold',
   },
-}); 
+});

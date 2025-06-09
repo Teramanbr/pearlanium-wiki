@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
+import { createUserWithEmailAndPassword } from '@/firebase';
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
@@ -12,6 +13,7 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const themedPlaceholderColor = theme === 'dark' ? '#888' : '#BBB';
@@ -20,7 +22,7 @@ export default function SignUpScreen() {
   const buttonColor = '#FF7001'; 
   const buttonTextColor = '#FFFFFF';
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!email || !password || !confirmPassword) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
@@ -29,8 +31,25 @@ export default function SignUpScreen() {
       Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
-    Alert.alert('Cadastro', `Email: ${email} cadastrado com sucesso!`);
-    // router.replace('/login'); // Navigate to login after sign up
+
+    try {
+      setLoading(true);
+      await createUserWithEmailAndPassword(email, password);
+      Alert.alert('Sucesso', 'Conta criada com sucesso!');
+      router.replace('/login');
+    } catch (error: any) {
+      let errorMessage = 'Ocorreu um erro ao criar a conta';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Este email já está em uso';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Email inválido';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'A senha deve ter pelo menos 6 caracteres';
+      }
+      Alert.alert('Erro', errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,9 +104,16 @@ export default function SignUpScreen() {
       <TouchableOpacity 
         style={[styles.button, { backgroundColor: buttonColor }]} 
         onPress={handleSignUp}
+        disabled={loading}
       >
-        <FontAwesome name="user-plus" size={20} color={buttonTextColor} style={styles.buttonIcon} />
-        <Text style={[styles.buttonText, { color: buttonTextColor }]}>Cadastrar</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color={buttonTextColor} />
+        ) : (
+          <>
+            <FontAwesome name="user-plus" size={20} color={buttonTextColor} style={styles.buttonIcon} />
+            <Text style={[styles.buttonText, { color: buttonTextColor }]}>Cadastrar</Text>
+          </>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.replace('/login')} style={styles.signInButton}>
@@ -150,4 +176,4 @@ const styles = StyleSheet.create({
   signInLink: {
     fontWeight: 'bold',
   },
-}); 
+});
