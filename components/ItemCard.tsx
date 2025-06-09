@@ -9,6 +9,7 @@ export interface Item {
   id: string;
   name: string;
   description: string;
+  hasRecipes: boolean; // New property to conditionally show recipes
   imageUri?: string; // Optional image URI
 }
 
@@ -117,4 +118,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});
