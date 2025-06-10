@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList, ScrollView } from 'react-native';
 
 // Static image imports
 type ItemImageMap = {
@@ -37,6 +37,8 @@ const itemImages: ItemImageMap = {
 import { Item } from '@/components/ItemCard';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
+import { getComments, addComment } from '@/firebase';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Mock items (should be replaced with a real data source in production)
 const NEW_MOCK_ITEMS: Item[] = [
@@ -70,8 +72,32 @@ const NEW_MOCK_ITEMS: Item[] = [
 export default function ItemDetailScreen() {
   const { id } = useLocalSearchParams();
   const { theme } = useTheme();
+  const { user } = useAuth();
   const item = NEW_MOCK_ITEMS.find((i) => i.id === id);
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (item) {
+      fetchComments();
+    }
+  }, [item]);
+
+  const fetchComments = async () => {
+    if (item) {
+      const fetchedComments = await getComments(item.id);
+      setComments(fetchedComments);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (comment.trim() && user && item) {
+      await addComment(item.id, user.uid, comment);
+      setComment('');
+      fetchComments();
+    }
+  };
 
   // Create styles inside component to access theme
   const styles = StyleSheet.create({
@@ -134,6 +160,37 @@ export default function ItemDetailScreen() {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    commentsContainer: {
+      marginTop: 24,
+    },
+    commentsTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 12,
+    },
+    commentItem: {
+      marginBottom: 8,
+      padding: 8,
+      borderRadius: 4,
+      backgroundColor: theme === 'dark' ? Colors.dark.card : Colors.light.card,
+    },
+    commentUser: {
+      fontWeight: 'bold',
+      marginBottom: 4,
+    },
+    commentInputContainer: {
+      flexDirection: 'row',
+      marginTop: 12,
+    },
+    commentInput: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: theme === 'dark' ? '#555' : '#ccc',
+      borderRadius: 4,
+      paddingHorizontal: 8,
+      marginRight: 8,
+      color: themedTextColor,
+    },
     button: {
       backgroundColor: Colors.pearlOrange,
       paddingVertical: 12,
@@ -158,7 +215,7 @@ export default function ItemDetailScreen() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme === 'dark' ? Colors.dark.background : Colors.light.background }]}>
+    <ScrollView style={[styles.container, { backgroundColor: theme === 'dark' ? Colors.dark.background : Colors.light.background }]}>
       <View style={styles.card}>
         {/* Item image */}
         <View style={styles.imagePlaceholder}>
@@ -193,6 +250,33 @@ export default function ItemDetailScreen() {
           </View>
         )}
       </View>
-    </View>
+
+      {/* Comments Section */}
+      <View style={styles.commentsContainer}>
+        <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comments</Text>
+        <FlatList
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.commentItem}>
+              <Text style={[styles.commentUser, { color: themedTextColor }]}>{item.userId}</Text>
+              <Text style={{ color: themedTextColor }}>{item.text}</Text>
+            </View>
+          )}
+        />
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Add a comment..."
+            placeholderTextColor={theme === 'dark' ? '#999' : '#666'}
+            value={comment}
+            onChangeText={setComment}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleAddComment}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
