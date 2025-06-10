@@ -1,4 +1,36 @@
 import React, { memo } from 'react';
+// Static image imports
+type ItemImageMap = {
+  [key: string]: any; // Explicit index signature
+};
+
+const itemImages: ItemImageMap = {
+  'lingote-de-perolânio': require('../assets/images/items/lingote-de-perolânio.png'),
+  'espada-de-perolânio': require('../assets/images/items/espada-de-perolânio.png'),
+  'picareta-de-perolânio': require('../assets/images/items/picareta-de-perolânio.png'),
+  'capacete-de-perolânio': require('../assets/images/items/capacete-de-perolânio.png'),
+  'fragmento-de-eco-calibrado': require('../assets/images/items/fragmento-de-eco-calibrado.png'),
+  'peitoral-de-perolânio': require('../assets/images/items/peitoral-de-perolânio.png'),
+  'calças-de-perolânio': require('../assets/images/items/calças-de-perolânio.png'),
+  'botas-de-perolânio': require('../assets/images/items/botas-de-perolânio.png'),
+  'machado-de-perolânio': require('../assets/images/items/machado-de-perolânio.png'),
+  'enxada-de-perolânio': require('../assets/images/items/enxada-de-perolânio.png'),
+  'pá-de-perolânio': require('../assets/images/items/pá-de-perolânio.png'),
+  'espada-de-perolânio-reforçada': require('../assets/images/items/espada-de-perolânio-reforçada.png'),
+  'picareta-de-perolânio-reforçada': require('../assets/images/items/picareta-de-perolânio-reforçada.png'),
+  'capacete-de-perolânio-reforçado': require('../assets/images/items/capacete-de-perolânio-reforçado.png'),
+  'peitoral-de-perolânio-reforçado': require('../assets/images/items/peitoral-de-perolânio-reforçado.png'),
+  'calças-de-perolânio-reforçadas': require('../assets/images/items/calças-de-perolânio-reforçadas.png'),
+  'botas-de-perolânio-reforçadas': require('../assets/images/items/botas-de-perolânio-reforçadas.png'),
+  'machado-de-perolânio-reforçado': require('../assets/images/items/machado-de-perolânio-reforçado.png'),
+  'enxada-de-perolânio-reforçada': require('../assets/images/items/enxada-de-perolânio-reforçada.png'),
+  'pá-de-perolânio-reforçada': require('../assets/images/items/pá-de-perolânio-reforçada.png'),
+  'perolânio-bruto': require('../assets/images/items/perolânio-bruto.png'),
+  'molde-de-ferraria-para-melhoria-de-perolânio': require('../assets/images/items/molde-de-ferraria-para-melhoria-de-perolânio.png'),
+  'molde-de-ferraria-para-melhoria-de-perolânio-reforçado': require('../assets/images/items/molde-de-ferraria-para-melhoria-de-perolânio-reforçado.png'),
+  'bloco-perolado': require('../assets/images/items/bloco-perolado.png'),
+  'bloco-de-perolânio': require('../assets/images/items/bloco-de-perolânio.png')
+};
 import { StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Text, View } from '@/components/Themed';
@@ -10,7 +42,7 @@ export interface Item {
   name: string;
   description: string;
   hasRecipes: boolean; // New property to conditionally show recipes
-  imageUri?: string; // Optional image URI
+  imageName?: string; // Optional local image name
 }
 
 interface ItemCardProps {
@@ -32,8 +64,12 @@ function ItemCard({ item, onItemPress, style }: ItemCardProps) {
   return (
     <View style={[styles.card, { backgroundColor: cardBackgroundColor }, style]}>
       <View style={styles.imagePlaceholder}>
-        {item.imageUri ? (
-          <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
+        {item.imageName ? (
+          <Image 
+            source={item.imageName ? itemImages[item.imageName] : null} 
+            style={styles.itemImage}
+            onError={(e) => console.log('Failed to load image:', e.nativeEvent.error)}
+          />
         ) : (
           <Text style={{ color: descriptionColor }}>Image</Text> // Simple placeholder text
         )}
