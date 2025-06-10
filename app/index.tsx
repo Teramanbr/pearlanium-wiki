@@ -99,17 +99,6 @@ export default function TabOneScreen() {
             <FontAwesome name="cube" size={18} color="#fff" style={styles.buttonIcon} />
             <Text style={styles.buttonText}>Explorar Itens</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[
-              styles.button, 
-              isTablet && styles.buttonTablet, 
-              styles.contributeButton
-            ]} 
-            onPress={() => console.log('Contribuir Pressionado')}
-          >
-            <FontAwesome name="pencil" size={18} color="#fff" style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>Contribuir</Text>
-          </TouchableOpacity>
         </View>
 
         {/* New Cards Section */}
@@ -129,8 +118,8 @@ export default function TabOneScreen() {
           {/* New Community Driven Card */}
           <View style={dynamicCardStyles.card} >
             <FontAwesome name="pencil" size={30} color="#FFA500" style={dynamicCardStyles.cardIcon} />
-            <Text style={dynamicCardStyles.cardTitle}>Desenvolvido pela Comunidade</Text>
-            <Text style={dynamicCardStyles.cardDescription}>Ajude-nos a manter a Wiki do Mod Pearlanium precisa e atualizada enviando correções e adições.</Text>
+            <Text style={dynamicCardStyles.cardTitle}>Feito pelo Desenvolvedor</Text>
+            <Text style={dynamicCardStyles.cardDescription}>O próprio desenvolvedor do mod fez essa wiki, garantindo a acurácia das informações.</Text>
           </View>
         </View>
 
@@ -279,10 +268,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10, // Spacing between buttons on tablet
   },
   exploreButton: {
-    backgroundColor: accentColor,
-  },
-  contributeButton: {
-    backgroundColor: '#FF7001', // Laranja (Orange background restored)
+    backgroundColor: '#FF7001', // Changed to orange
   },
   buttonText: {
     color: '#fff', // Ensure button text is white for all buttons by default
