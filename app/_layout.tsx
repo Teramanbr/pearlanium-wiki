@@ -45,9 +45,9 @@ function CustomDrawerContent(props: any) {
   const themedTextColor = theme === 'dark' ? '#FFFFFF' : '#000000';
 
   const items = props.items || [];
-  const filteredItems = user
-    ? items.filter((item: { key: string }) => item.key !== 'login')
-    : items;
+  const filteredItems = items.filter((item: { key: string }) => 
+    item.key !== 'login'
+  );
 
   return (
     <DrawerContentScrollView {...props} style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
@@ -62,6 +62,17 @@ function CustomDrawerContent(props: any) {
             <FontAwesome name="user-circle" size={size} color={color} />
           )}
           onPress={() => props.navigation.navigate('profile')}
+          labelStyle={[styles.customDrawerLabel, { color: themedTextColor }]}
+          style={styles.customDrawerItem}
+        />
+      )}
+      {!user && (
+        <DrawerItem
+          label="Login"
+          icon={({ color, size }) => (
+            <FontAwesome name="sign-in" size={size} color={color} />
+          )}
+          onPress={() => props.navigation.navigate('login')}
           labelStyle={[styles.customDrawerLabel, { color: themedTextColor }]}
           style={styles.customDrawerItem}
         />
@@ -165,12 +176,8 @@ function AppContent() {
           <Drawer.Screen
             name="login"
             options={{
-              drawerLabel: 'Login',
+              drawerItemStyle: { display: 'none' },
               title: 'Login',
-              drawerIcon: ({ size, color }) => (
-                <FontAwesome name="sign-in" size={size} color={color} />
-              ),
-              drawerItemStyle: { display: user ? 'none' : 'flex' }
             }}
           />
           <Drawer.Screen
