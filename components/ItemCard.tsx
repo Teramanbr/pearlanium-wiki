@@ -89,7 +89,7 @@ function ItemCard({ item, onItemPress, style }: ItemCardProps) {
           ]} 
           onPress={onItemPress ? () => onItemPress(item) : undefined}
         >
-          <Text style={[styles.detailsButtonText, { color: buttonTextColor }]}>View Details</Text>
+          <Text style={[styles.detailsButtonText, { color: buttonTextColor }]}>Ver Detalhes</Text>
           <FontAwesome name="arrow-right" size={16} color={buttonTextColor} />
         </TouchableOpacity>
       </View>

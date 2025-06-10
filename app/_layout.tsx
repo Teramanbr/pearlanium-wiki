@@ -18,7 +18,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
 
 import { ThemeProviderComponent, useTheme } from '@/contexts/ThemeContext';
-import { auth } from '@/firebase';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -36,6 +37,7 @@ SplashScreen.preventAutoHideAsync();
 // Custom Drawer Content Component
 function CustomDrawerContent(props: any) {
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
   const iconName = theme === 'dark' ? 'sun-o' : 'moon-o';
   const buttonText = theme === 'dark' ? 'Mudar para Tema Claro' : 'Mudar para Tema Escuro';
 
@@ -43,7 +45,7 @@ function CustomDrawerContent(props: any) {
   const themedTextColor = theme === 'dark' ? '#FFFFFF' : '#000000';
 
   const items = props.items || [];
-  const filteredItems = auth.currentUser
+  const filteredItems = user
     ? items.filter((item: { key: string }) => item.key !== 'login')
     : items;
 
@@ -53,7 +55,7 @@ function CustomDrawerContent(props: any) {
         <DrawerItemList {...props} items={filteredItems} />
       </View>
       {/* Profile Button - only shown when logged in */}
-      {auth.currentUser && (
+      {user && (
         <DrawerItem
           label="Perfil"
           icon={({ color, size }) => (
@@ -100,14 +102,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProviderComponent>
-      <AppContent />
-    </ThemeProviderComponent>
+    <AuthProvider>
+      <ThemeProviderComponent>
+        <AppContent />
+      </ThemeProviderComponent>
+    </AuthProvider>
   );
 }
 
 function AppContent() {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const newActiveBgColor = '#FF7001'; // Solid orange for active background
   const newActiveTintColor = '#FFFFFF'; // White for active text/icon
   const inactiveColor = theme === 'dark' ? '#A0A0A0' : '#606060';
@@ -157,18 +162,17 @@ function AppContent() {
               ),
             }}
           />
-          {!auth.currentUser && (
-            <Drawer.Screen
-              name="login"
-              options={{
-                drawerLabel: 'Login',
-                title: 'Login',
-                drawerIcon: ({ size, color }) => (
-                  <FontAwesome name="sign-in" size={size} color={color} />
-                ),
-              }}
-            />
-          )}
+          <Drawer.Screen
+            name="login"
+            options={{
+              drawerLabel: 'Login',
+              title: 'Login',
+              drawerIcon: ({ size, color }) => (
+                <FontAwesome name="sign-in" size={size} color={color} />
+              ),
+              drawerItemStyle: { display: user ? 'none' : 'flex' }
+            }}
+          />
           <Drawer.Screen
             name="signup"
             options={{
