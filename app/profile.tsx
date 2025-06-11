@@ -174,14 +174,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 10,
-    width: '100%',
     marginTop: 10,
+    alignSelf: 'center',
   },
   buttonIcon: {
     marginRight: 10,
   },
   buttonText: {
+    flex: 1,
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

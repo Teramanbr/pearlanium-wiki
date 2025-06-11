@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
 
 // Static image imports
 type ItemImageMap = {
@@ -221,68 +221,71 @@ export default function ItemDetailScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme === 'dark' ? Colors.dark.background : Colors.light.background }]}>
-      <View style={styles.card}>
-        {/* Item image */}
-        <View style={styles.imagePlaceholder}>
-          <Image 
-            source={item.imageName ? itemImages[item.imageName] : null} 
-            style={{width: '100%', height: '100%'}}
-            resizeMode="contain"
-          />
-        </View>
-        
-        <Text style={[styles.title, { color: themedTextColor }]}>{item.name}</Text>
-        <Text style={[styles.description, { color: themedTextColor }]}>{item.description}</Text>
-        
-        {/* Metadata section */}
-        <View style={styles.metadataContainer}>
-          <View style={styles.metadataRow}>
-            <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Type:</Text>
-            <Text style={[styles.metadataValue, { color: themedTextColor }]}>Material</Text>
-          </View>
-          <View style={styles.metadataRow}>
-            <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Rarity:</Text>
-            <Text style={[styles.metadataValue, { color: themedTextColor }]}>Common</Text>
-          </View>
-        </View>
-        
-        {/* Action button - conditionally shown */}
-        {item.hasRecipes && (
-          <View style={styles.actions}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>View Recipes</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-
-      {/* Comments Section */}
-      <View style={styles.commentsContainer}>
-        <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comments</Text>
-        <View style={styles.commentInputContainer}>
-          <TextInput
-            style={styles.commentInput}
-            placeholder="Add a comment..."
-            placeholderTextColor={theme === 'dark' ? '#999' : '#666'}
-            value={comment}
-            onChangeText={setComment}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleAddComment}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={comments}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.commentItem}>
-              <Text style={[styles.commentUser, { color: themedTextColor }]}>{item.userName}</Text>
-              <Text style={{ color: themedTextColor }}>{item.text}</Text>
+    <FlatList
+      style={[styles.container, { backgroundColor: theme === 'dark' ? Colors.dark.background : Colors.light.background }]}
+      ListHeaderComponent={
+        <>
+          <View style={styles.card}>
+            {/* Item image */}
+            <View style={styles.imagePlaceholder}>
+              <Image 
+                source={item.imageName ? itemImages[item.imageName] : null} 
+                style={{width: '100%', height: '100%'}}
+                resizeMode="contain"
+              />
             </View>
-          )}
-        />
-      </View>
-    </ScrollView>
+            
+            <Text style={[styles.title, { color: themedTextColor }]}>{item.name}</Text>
+            <Text style={[styles.description, { color: themedTextColor }]}>{item.description}</Text>
+            
+            {/* Metadata section */}
+            <View style={styles.metadataContainer}>
+              <View style={styles.metadataRow}>
+                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Type:</Text>
+                <Text style={[styles.metadataValue, { color: themedTextColor }]}>Material</Text>
+              </View>
+              <View style={styles.metadataRow}>
+                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Rarity:</Text>
+                <Text style={[styles.metadataValue, { color: themedTextColor }]}>Common</Text>
+              </View>
+            </View>
+            
+            {/* Action button - conditionally shown */}
+            {item.hasRecipes && (
+              <View style={styles.actions}>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>View Recipes</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
+          {/* Comments Section */}
+          <View style={styles.commentsContainer}>
+            <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comments</Text>
+            <View style={styles.commentInputContainer}>
+              <TextInput
+                style={styles.commentInput}
+                placeholder="Add a comment..."
+                placeholderTextColor={theme === 'dark' ? '#999' : '#666'}
+                value={comment}
+                onChangeText={setComment}
+              />
+              <TouchableOpacity style={styles.button} onPress={handleAddComment}>
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      }
+      data={comments}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View style={styles.commentItem}>
+          <Text style={[styles.commentUser, { color: themedTextColor }]}>{item.userName}</Text>
+          <Text style={{ color: themedTextColor }}>{item.text}</Text>
+        </View>
+      )}
+    />
   );
 }

@@ -28,14 +28,5 @@ Substitua os valores pelos dados reais da sua conta Firebase.
 ## Execução do Projeto
 
 ### Para versão WEB:
-1. Certifique-se que o arquivo `metro.config.js` **não está presente** no diretório raiz
-2. Instale dependências: `npm install`
-3. Execute: `npm run web`
-
-### Para versão MOBILE (Android/iOS):
-1. Restaure o arquivo `metro.config.js` (necessário para bundler do React Native)
-2. Instale dependências: `npm install`
-3. Execute: `npm start` e escaneie o QR code com app Expo Go
-
-## Nota Importante
-O arquivo `metro.config.js` é necessário apenas para a versão mobile. Para executar na web, **você deve excluir este arquivo** temporariamente. Isso ocorre devido a diferenças de configuração entre as plataformas.
+1. Instale dependências: `npm install`
+2. Execute: `npx expo start`

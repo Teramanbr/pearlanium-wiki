@@ -122,7 +122,7 @@ export default function ItemsScreen() {
       justifyContent: 'flex-end' // Align content to bottom
     }]}>
       <Animated.View style={{ opacity: titleOpacity }}>
-        <Text style={[styles.title, { color: theme === 'dark' ? '#4CAF50' : Colors.light.tint }]}>
+        <Text style={[styles.title, { color: '#4CAF50' }]}>
           Itens do Mod Perolânio
         </Text>
       </Animated.View>
