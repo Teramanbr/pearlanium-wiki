@@ -93,7 +93,7 @@ export default function TabOneScreen() {
           </View>
         </View>
 
-        <Text style={styles.subtitle}>Explore um novo universo de possibilidades com o Mod Pearlanium, adicionando incríveis itens, blocos e mecânicas ao seu mundo Minecraft.</Text>
+        <Text style={styles.subtitle}>Explore um novo universo de possibilidades com o Mod do Perolânio, adicionando incríveis itens, blocos e mecânicas ao seu mundo Minecraft.</Text>
         <View style={[styles.buttonsContainer, isTablet && styles.buttonsContainerTablet]}>
           <TouchableOpacity style={[styles.button, isTablet && styles.buttonTablet, styles.exploreButton]} onPress={() => router.push('/itens')}>
             <FontAwesome name="cube" size={18} color="#fff" style={styles.buttonIcon} />

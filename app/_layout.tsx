@@ -177,7 +177,7 @@ function AppContent() {
             name="login"
             options={{
               drawerItemStyle: { display: 'none' },
-              title: 'Login',
+              title: 'Entrar',
             }}
           />
           <Drawer.Screen
@@ -215,7 +215,7 @@ function AppContent() {
             name="+not-found"
             options={{
               drawerItemStyle: { display: 'none' },
-              title: 'Oops!',
+              title: 'Ops!',
             }}
           />
         </Drawer>

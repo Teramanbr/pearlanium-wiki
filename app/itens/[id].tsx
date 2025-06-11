@@ -241,12 +241,12 @@ export default function ItemDetailScreen() {
             {/* Metadata section */}
             <View style={styles.metadataContainer}>
               <View style={styles.metadataRow}>
-                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Type:</Text>
+                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Tipo:</Text>
                 <Text style={[styles.metadataValue, { color: themedTextColor }]}>Material</Text>
               </View>
               <View style={styles.metadataRow}>
-                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Rarity:</Text>
-                <Text style={[styles.metadataValue, { color: themedTextColor }]}>Common</Text>
+                <Text style={[styles.metadataLabel, { color: themedTextColor }]}>Raridade:</Text>
+                <Text style={[styles.metadataValue, { color: themedTextColor }]}>Comum</Text>
               </View>
             </View>
             
@@ -254,7 +254,7 @@ export default function ItemDetailScreen() {
             {item.hasRecipes && (
               <View style={styles.actions}>
                 <TouchableOpacity style={styles.button}>
-                  <Text style={styles.buttonText}>View Recipes</Text>
+                  <Text style={styles.buttonText}>Ver Receitas</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -262,17 +262,17 @@ export default function ItemDetailScreen() {
 
           {/* Comments Section */}
           <View style={styles.commentsContainer}>
-            <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comments</Text>
+            <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comentários</Text>
             <View style={styles.commentInputContainer}>
               <TextInput
                 style={styles.commentInput}
-                placeholder="Add a comment..."
+                placeholder="Adicione um comentário..."
                 placeholderTextColor={theme === 'dark' ? '#999' : '#666'}
                 value={comment}
                 onChangeText={setComment}
               />
               <TouchableOpacity style={styles.button} onPress={handleAddComment}>
-                <Text style={styles.buttonText}>Submit</Text>
+                <Text style={styles.buttonText}>Enviar</Text>
               </TouchableOpacity>
             </View>
           </View>

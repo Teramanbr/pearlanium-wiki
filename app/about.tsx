@@ -11,7 +11,7 @@ export default function AboutScreen() {
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <Text style={styles.infoText}>Este aplicativo é um trabalho de faculdade.</Text>
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      {/* Use uma barra de status clara no iOS para compensar o espaço preto acima do modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );
