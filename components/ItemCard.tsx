@@ -41,7 +41,6 @@ export interface Item {
   id: string;
   name: string;
   description: string;
-  hasRecipes: boolean; // New property to conditionally show recipes
   imageName?: string; // Optional local image name
 }
 
