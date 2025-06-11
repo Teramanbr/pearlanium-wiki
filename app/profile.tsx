@@ -5,7 +5,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
-import { logout, updateUserProfile } from '@/firebase';
+import { logout, updateUserProfile, deleteUserAccount } from '@/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfileScreen() {
@@ -49,6 +49,29 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Deletar Conta',
+      'Você tem certeza que deseja deletar sua conta? Essa ação é irreversível.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Deletar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteUserAccount();
+              router.replace('/login');
+              Alert.alert('Sucesso', 'Sua conta foi deletada.');
+            } catch (error) {
+              Alert.alert('Erro', 'Ocorreu um erro ao deletar sua conta.');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -83,15 +106,24 @@ export default function ProfileScreen() {
             color={themedTextColor}
           />
         </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.button, { backgroundColor: Colors.dark.danger, marginTop: 20 }]}
+          onPress={handleDeleteAccount}
+        >
+          <FontAwesome name="trash" size={20} color={buttonTextColor} style={styles.buttonIcon} />
+          <Text style={[styles.buttonText, { color: buttonTextColor }]}>Deletar Conta</Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity 
-        style={[styles.button, { backgroundColor: buttonColor }]}
-        onPress={handleLogout}
-      >
-        <FontAwesome name="sign-out" size={20} color={buttonTextColor} style={styles.buttonIcon} />
-        <Text style={[styles.buttonText, { color: buttonTextColor }]}>Sair</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={[styles.button, { backgroundColor: buttonColor }]}
+          onPress={handleLogout}
+        >
+          <FontAwesome name="sign-out" size={20} color={buttonTextColor} style={styles.buttonIcon} />
+          <Text style={[styles.buttonText, { color: buttonTextColor }]}>Sair</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -131,6 +163,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    width: '100%',
+    maxWidth: 400,
+  },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -139,7 +175,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 10,
     width: '100%',
-    maxWidth: 400,
+    marginTop: 10,
   },
   buttonIcon: {
     marginRight: 10,

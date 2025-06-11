@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
-import { signInWithEmailAndPassword } from '@/firebase';
+import { signInWithEmailAndPassword, resetPassword } from '@/firebase';
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
@@ -20,6 +20,20 @@ export default function LoginScreen() {
   const inputBorderColor = theme === 'dark' ? '#3A3A3C' : '#D1D1D6';
   const customButtonColor = '#FF7001';
   const buttonTextColor = '#FFFFFF';
+
+  const handleForgotPassword = () => {
+    if (!email) {
+      Alert.alert('Erro', 'Por favor, insira seu email para redefinir a senha.');
+      return;
+    }
+    resetPassword(email)
+      .then(() => {
+        Alert.alert('Sucesso', 'Um email de redefinição de senha foi enviado para ' + email);
+      })
+      .catch((error) => {
+        Alert.alert('Erro', error.message);
+      });
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -104,6 +118,12 @@ export default function LoginScreen() {
           Não tem uma conta? <Text style={styles.signUpLink}>Cadastre-se</Text>
         </Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordButton}>
+        <Text style={[styles.forgotPasswordText, { color: themedTextColor }]}>
+          Esqueceu sua senha?
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -158,5 +178,12 @@ const styles = StyleSheet.create({
   },
   signUpLink: {
     fontWeight: 'bold',
+  },
+  forgotPasswordButton: {
+    marginTop: 15,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });

@@ -5,7 +5,9 @@ import {
   createUserWithEmailAndPassword as firebaseCreateUser,
   signOut,
   User,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail,
+  deleteUser
 } from 'firebase/auth';
 import { getFirestore, collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { firebaseConfig } from './firebaseConfig';
@@ -32,6 +34,18 @@ export const logout = () => {
 
 export const updateUserProfile = (user: User, profile: { displayName?: string; photoURL?: string }) => {
   return updateProfile(user, profile);
+};
+
+export const resetPassword = (email: string) => {
+  return sendPasswordResetEmail(auth, email);
+};
+
+export const deleteUserAccount = () => {
+  const user = auth.currentUser;
+  if (user) {
+    return deleteUser(user);
+  }
+  return Promise.reject(new Error("No user is currently signed in."));
 };
 
 // Firestore methods

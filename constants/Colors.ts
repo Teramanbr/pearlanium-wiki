@@ -21,6 +21,7 @@ export default {
     tabIconSelected: tintColorDark,
     placeholderBackground: '#1C1C1E',
     placeholderText: '#888',
+    danger: '#FF3B30',
   },
   pearlOrange: '#FF7001', // New color for buttons
 };
