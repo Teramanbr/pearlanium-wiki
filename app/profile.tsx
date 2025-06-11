@@ -1,27 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
-import { auth, logout } from '@/firebase';
+import { logout, updateUserProfile } from '@/firebase';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfileScreen() {
   const { theme } = useTheme();
   const router = useRouter();
-  const user = auth.currentUser;
+  const { user } = useAuth();
 
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const buttonColor = '#FF7001';
   const buttonTextColor = '#FFFFFF';
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState(
-    user?.email ? user.email.split('@')[0] : 'Usuário'
-  );
+  const [username, setUsername] = useState('');
   const joinDate = user?.metadata.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString('pt-BR')
     : 'Data desconhecida';
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.displayName || (user.email ? user.email.split('@')[0] : 'Usuário'));
+    }
+  }, [user]);
+
+  const handleSave = async () => {
+    if (user) {
+      try {
+        await updateUserProfile(user, { displayName: username });
+        setIsEditing(false);
+        Alert.alert('Sucesso', 'Nome de usuário atualizado.');
+      } catch (error) {
+        Alert.alert('Erro', 'Ocorreu um erro ao atualizar o nome de usuário.');
+      }
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -57,7 +74,7 @@ export default function ProfileScreen() {
           Membro desde: {joinDate}
         </Text>
         <TouchableOpacity
-          onPress={() => setIsEditing(!isEditing)}
+          onPress={isEditing ? handleSave : () => setIsEditing(true)}
           style={styles.editButton}
         >
           <FontAwesome

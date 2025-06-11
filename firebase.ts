@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword as firebaseSignIn,
   createUserWithEmailAndPassword as firebaseCreateUser,
   signOut,
-  User
+  User,
+  updateProfile
 } from 'firebase/auth';
 import { getFirestore, collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { firebaseConfig } from './firebaseConfig';
@@ -29,11 +30,16 @@ export const logout = () => {
   return signOut(auth);
 };
 
+export const updateUserProfile = (user: User, profile: { displayName?: string; photoURL?: string }) => {
+  return updateProfile(user, profile);
+};
+
 // Firestore methods
-export const addComment = (itemId: string, userId: string, text: string) => {
+export const addComment = (itemId: string, userId: string, userName: string, text: string) => {
   return addDoc(collection(db, 'comments'), {
     itemId,
     userId,
+    userName,
     text,
     createdAt: new Date(),
   });

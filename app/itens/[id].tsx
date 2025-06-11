@@ -73,6 +73,7 @@ export default function ItemDetailScreen() {
   const { id } = useLocalSearchParams();
   const { theme } = useTheme();
   const { user } = useAuth();
+  const router = useRouter();
   const item = NEW_MOCK_ITEMS.find((i) => i.id === id);
   const themedTextColor = theme === 'dark' ? Colors.dark.text : Colors.light.text;
   const [comment, setComment] = useState('');
@@ -92,8 +93,12 @@ export default function ItemDetailScreen() {
   };
 
   const handleAddComment = async () => {
-    if (comment.trim() && user && item) {
-      await addComment(item.id, user.uid, comment);
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    if (comment.trim() && item) {
+      await addComment(item.id, user.uid, user.displayName || 'Anonymous', comment);
       setComment('');
       fetchComments();
     }
@@ -181,6 +186,7 @@ export default function ItemDetailScreen() {
     commentInputContainer: {
       flexDirection: 'row',
       marginTop: 12,
+      marginBottom: 20,
     },
     commentInput: {
       flex: 1,
@@ -254,16 +260,6 @@ export default function ItemDetailScreen() {
       {/* Comments Section */}
       <View style={styles.commentsContainer}>
         <Text style={[styles.commentsTitle, { color: themedTextColor }]}>Comments</Text>
-        <FlatList
-          data={comments}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.commentItem}>
-              <Text style={[styles.commentUser, { color: themedTextColor }]}>{item.userId}</Text>
-              <Text style={{ color: themedTextColor }}>{item.text}</Text>
-            </View>
-          )}
-        />
         <View style={styles.commentInputContainer}>
           <TextInput
             style={styles.commentInput}
@@ -276,6 +272,16 @@ export default function ItemDetailScreen() {
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
+        <FlatList
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.commentItem}>
+              <Text style={[styles.commentUser, { color: themedTextColor }]}>{item.userName}</Text>
+              <Text style={{ color: themedTextColor }}>{item.text}</Text>
+            </View>
+          )}
+        />
       </View>
     </ScrollView>
   );

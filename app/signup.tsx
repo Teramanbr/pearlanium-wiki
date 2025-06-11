@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Alert, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
-import { createUserWithEmailAndPassword } from '@/firebase';
+import { createUserWithEmailAndPassword, updateUserProfile } from '@/firebase';
 import { Text, View } from '@/components/Themed';
 import { useTheme } from '@/contexts/ThemeContext';
 import Colors from '@/constants/Colors';
@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router'; // Import useRouter for navigation
 export default function SignUpScreen() {
   const { theme } = useTheme();
   const router = useRouter();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,7 +24,7 @@ export default function SignUpScreen() {
   const buttonTextColor = '#FFFFFF';
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -34,7 +35,10 @@ export default function SignUpScreen() {
 
     try {
       setLoading(true);
-      await createUserWithEmailAndPassword(email, password);
+      const userCredential = await createUserWithEmailAndPassword(email, password);
+      if (userCredential.user) {
+        await updateUserProfile(userCredential.user, { displayName: username });
+      }
       Alert.alert('Sucesso', 'Conta criada com sucesso!');
       router.replace('/login');
     } catch (error: any) {
@@ -55,6 +59,21 @@ export default function SignUpScreen() {
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: themedTextColor }]}>Criar Conta</Text>
+      <TextInput
+        style={[
+          styles.input,
+          { 
+            color: themedTextColor,
+            backgroundColor: inputBackgroundColor,
+            borderColor: inputBorderColor,
+          }
+        ]}
+        placeholder="Nome de usuário"
+        placeholderTextColor={themedPlaceholderColor}
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
       <TextInput
         style={[
           styles.input,
